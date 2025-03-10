@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build SDL2 Project",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "-Wall",
+                "src/Enemies.cpp",
+                "src/map.cpp",
+                "src/Tower.cpp",
+                "src/main.cpp",
+                // "src/test.cpp",
+                "-o", "bin/MyGame.exe",
+                "-I", "D:/laptrinh/LTNC/Code/GameProject/SDL2/x86_64-w64-mingw32/include/SDL2",
+                "-I", "D:/laptrinh/LTNC/Code/GameProject/include",
+                "-L", "D:/laptrinh/LTNC/Code/GameProject/SDL2/x86_64-w64-mingw32/lib",
+                "-lmingw32", "-lSDL2main","-lSDL2_gfx", "-lSDL2", "-lSDL2_image", "-lSDL2_mixer" ,"-lSDL2_ttf"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

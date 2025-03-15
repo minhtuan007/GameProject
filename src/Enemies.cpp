@@ -14,12 +14,17 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
     int enemyW = 40;
     int enemyH = 40;
 
+    // this->spawnX = 540;
+    // this->spawnY = 360;
+    
+
     do {
         this->spawnX = rand() % 1280;
         this->spawnY = rand() % 720;
     } while (   this->spawnX > centerX - halfLength && this->spawnY > centerY - halfLength &&
                 this->spawnX < centerX + halfLength && this->spawnY < centerY + halfLength );
-    
+
+
     posX = this->spawnX;
     posY = this->spawnY;
     rect.x = this->spawnX;
@@ -41,9 +46,9 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
 }
 
 void Enemy::update(Uint32 dT) {
-    // dT = 1;
-    posX += speed * dT/1 * dirX; 
-    posY += speed * dT/1 * dirY; 
+    float timeInSec = dT / 1000.f;
+    posX += speed * timeInSec * dirX; 
+    posY += speed * timeInSec * dirY; 
     rect.x = static_cast<int>(posX);
     rect.y = static_cast<int>(posY);
     
@@ -54,7 +59,7 @@ void Enemy::render(SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer, &rect);
 }
 
-bool Enemy::comeNearTower(SDL_Rect &rectTower) {
+bool Enemy::comeNearTower(SDL_Rect &rectTower, int towerArea) {
     int enemyX = rect.x + rect.w / 2;
     int enemyY = rect.y + rect.h / 2;
 
@@ -69,6 +74,6 @@ bool Enemy::comeNearTower(SDL_Rect &rectTower) {
 }
 
 bool Enemy::isEnemyOutScreen(){
-        return rect.x > 1280 || rect.y  > 720;
+        return rect.x < -10 || rect.x > 1290 || rect.y < -10 || rect.y > 730;
 }
 

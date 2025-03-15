@@ -1,26 +1,25 @@
 #pragma once
-#include<fstream>
-#include<iostream>
-#include<string>
-#include<cstring>
-#include<ctime>
-#include<cstdlib>
-#include<iomanip>
-
-#include<SDL.h>
-#include<SDL_image.h>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <SDL.h>
+#include <SDL_image.h>
 
 using namespace std;
+
 const int MAPW = 16;
 const int MAPH = 9;
 const int tileSize = 80;
 
-class Map{
+class Map {
 private:
     SDL_Rect mapRect;
-    string mapInfo[MAPW][MAPH];
+    string mapInfo[MAPH][MAPW];         
+    SDL_Texture* tileTextures[MAPH][MAPW]; 
 public:
-    bool getMap(string inputName, string outputName);
-    void renderMap(SDL_Renderer *renderer);
-    // void standardization()
+    Map();                              
+    ~Map();                            
+    bool loadMap(string inputName, SDL_Renderer* renderer); 
+    void renderMap(SDL_Renderer* renderer);
 };

@@ -8,9 +8,11 @@
             "args": [
                 "-g",
                 "-Wall",
-                "src/Enemies.cpp",
+                "src/bullet.cpp",
                 "src/map.cpp",
+                "src/Enemies.cpp",
                 "src/Tower.cpp",
+                // "src/game.cpp",
                 "src/main.cpp",
                 // "src/test.cpp",
                 "-o", "bin/MyGame.exe",

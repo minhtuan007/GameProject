@@ -4,6 +4,7 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <memory>
 
 
 #include<SDL.h>
@@ -13,10 +14,11 @@
 #include "Enemies.h"
 #include "Tower.h"
 #include "map.h"
+#include "bullet.h"
 
 using namespace std;
 
-vector<Enemy> enemies;
+vector<shared_ptr<Enemy>> enemies;
 vector<Tower> towers;
 Map map;
 
@@ -32,7 +34,10 @@ bool handleEvents();
 void updateFunction();
 void renderFunction();
 void renderText(string text, SDL_Rect destination);
+void renderFPS();
 string fileAssets(string file);
+float enemySpeed = 100;
+Uint32 lastShoot = SDL_GetTicks();
 
 int main(int argc, char** argv){
     if(!init()){
@@ -41,7 +46,7 @@ int main(int argc, char** argv){
     }
 
     srand(time(0));
-
+    
     GameIsRunning();
 
     cout << "GameOver!!!" << endl;
@@ -51,8 +56,13 @@ int main(int argc, char** argv){
 
 
 void GameIsRunning() {
+    const Uint32 TARGET_FPS = 60; // Mục tiêu 60 FPS
+    const Uint32 FRAME_TIME = 1000 / TARGET_FPS; // Thời gian mỗi frame (mili-giây)
+    Uint32 frameStart, frameTime;
 
     while (isRunning) {
+
+        frameStart = SDL_GetTicks();
 
         SDL_RenderClear(renderer);
         // SDL_Delay(30); //16 ~ 60 FPS;
@@ -60,11 +70,14 @@ void GameIsRunning() {
         handleEvents();
         updateFunction();
         renderFunction();
-
         SDL_RenderPresent(renderer);
+
+        frameTime = SDL_GetTicks() - frameStart;
+        if (frameTime < FRAME_TIME) {
+            SDL_Delay(FRAME_TIME - frameTime);
+        }
     }
 }
-
 
 
 bool handleEvents() {
@@ -73,9 +86,9 @@ bool handleEvents() {
     while (SDL_PollEvent( &evt)){
         if(evt.type == SDL_QUIT){
             isRunning = false;
-            return false;
+            break;
         }
-        if(evt.key.keysym.sym == SDLK_F1){
+        if(evt.key.keysym.sym == SDLK_F1 && evt.type == SDL_KEYDOWN){
             system("pause");
         }
 		if(evt.type == SDL_MOUSEBUTTONDOWN){
@@ -90,37 +103,46 @@ bool handleEvents() {
 
 Uint32 lastTime = SDL_GetTicks();
 void updateFunction() {
+    // Sinh kẻ thù với giới hạn tối đa
+    const int MAX_ENEMIES = 5; // Giới hạn số lượng kẻ thù
+    if (
+        enemies.size() < MAX_ENEMIES && 
+        rand() % 100 < 2) { // 2% cơ hội sinh kẻ thù mỗi frame
+            enemies.push_back(make_shared<Enemy>(640, 360, enemySpeed)); // Sử dụng std::make_shared
+        }
 
-    if (rand() % 100 < 20) { // % cơ hội spawn enemy mỗi frame
-        enemies.push_back(Enemy(640, 360, 1)); 
-    }
     Uint32 currentTime = SDL_GetTicks();
-    Uint32 dT = (currentTime - lastTime); 
+    Uint32 dT = currentTime - lastTime;
     lastTime = currentTime;
 
-    int towerPosX = 0, towerPosY = 0, towerW = 0, towerH = 0;
-    for (size_t i = 0; i < enemies.size(); i++) {
-        enemies[i].update(dT);
+    for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();) {
+        (*enemyIt)->update(dT);
 
-        //ra ngoài màn hình
-        if (enemies[i].isEnemyOutScreen()) {
-            enemies.erase(enemies.begin() + i); 
-            i--; 
-        }
-
-        for(size_t indexTower = 0; indexTower < towers.size(); indexTower++){
-
-            //Bị tiêu diệt khi vào vùng hoạt động của tháp canh
-            towers[indexTower].getTowerRect(towerPosX, towerPosY, towerW, towerH);
-            SDL_Rect rectTower = {towerPosX, towerPosY, towerW, towerH};
-            if(enemies[i].comeNearTower(rectTower)){
-                enemies.erase(enemies.begin() + i);
-                i--;
+        if ((*enemyIt)->isEnemyOutScreen()) {
+            shared_ptr<Enemy> destroyedEnemy = (*enemyIt);
+            for(auto &tower : towers){
+                tower.removeBulletWithEnemy(destroyedEnemy);
             }
+            enemyIt = enemies.erase(enemyIt); // Xóa an toàn với iterator
+        } else {
+            // Kiểm tra từng tháp
+            for (auto& tower : towers) {
+                int towerPosX, towerPosY, towerW, towerH;
+                tower.getTowerRect(towerPosX, towerPosY, towerW, towerH);
+                SDL_Rect rectTower = {towerPosX, towerPosY, towerW, towerH};
+                const Uint32 SHOOT_COOLDOWN = 300; // ms giữa các lần bắn
+                Uint32 currentTime = SDL_GetTicks();
+                if ((*enemyIt)->comeNearTower(rectTower, tower.getTowerArea()) && currentTime - tower.getLastShoot() >= SHOOT_COOLDOWN) {
+                    tower.shootEnemy(*enemyIt, currentTime);
+                }
+            }
+            ++enemyIt; // Tăng iterator nếu không xóa
         }
     }
+    for (auto& tower : towers) {
+        tower.updateBullet(dT);
+    }
 }
-
 void renderFunction() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -128,12 +150,15 @@ void renderFunction() {
     map.renderMap(renderer);
 
     for (auto& enemy : enemies) {
-        enemy.render(renderer);  
+        (*enemy).render(renderer);  
     }
 
 	for(size_t i = 0; i < towers.size(); i++){
 		towers[i].render(renderer);
+        towers[i].renderBullet(renderer);
 	}
+
+    renderFPS();
 }
 
 
@@ -172,7 +197,7 @@ bool init() {
     }
 
 
-    map.getMap(fileAssets("map.txt"), fileAssets("outputMap.txt"));
+    map.loadMap(fileAssets("map.txt"), renderer);
     
 
     return true;
@@ -209,4 +234,21 @@ void renderText(string text, SDL_Rect destination){
 
 string fileAssets(string file){
     return "D:/laptrinh/LTNC/Code/GameProject/assets/" + file;
+}
+
+void renderFPS() {
+    static Uint32 lastFrame = SDL_GetTicks();
+    static int frameCount = 0;
+    static float fps = 0.0f;
+
+    frameCount++;
+    Uint32 currentFrame = SDL_GetTicks();
+    if (currentFrame - lastFrame >= 1000) { // Cập nhật mỗi giây
+        fps = frameCount / ((currentFrame - lastFrame) / 1000.0f);
+        frameCount = 0;
+        lastFrame = currentFrame;
+    }
+
+    SDL_Rect dest = {10, 10, 0, 0};
+    renderText("FPS: " + to_string(static_cast<int>(fps)), dest);
 }

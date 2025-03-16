@@ -24,6 +24,6 @@ public:
     void shootEnemy(shared_ptr<Enemy> target, Uint32 currentTime);
     void renderBullet(SDL_Renderer* renderer);
     void updateBullet(Uint32 dT);
-    void removeBulletWithEnemy();
+    void removeBulletWithEnemy(shared_ptr<Enemy> destroyedEnemy);
     int getTowerArea() const {return towerArea;};
 };

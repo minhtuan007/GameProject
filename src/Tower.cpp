@@ -56,8 +56,15 @@ void Tower::updateBullet(Uint32 dT) {
     }
 }
 
-void Tower::removeBulletWithEnemy() {
-    bullets.clear();
+void Tower::removeBulletWithEnemy(shared_ptr<Enemy> destroyedEnemy) {
+    for (auto it = bullets.begin(); it != bullets.end();) {
+        if (it->getTarget() == destroyedEnemy) {
+            it = bullets.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    // bullets.clear();
 }
 
 void Tower::getTowerRect(int &posX, int &posY, int &towerW, int &towerH){

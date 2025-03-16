@@ -1,19 +1,18 @@
 #include "Enemies.h"
-#include <cmath>
-#include <iostream>
+
 using namespace std;
-Enemy::Enemy(int targetX, int targetY, float speed) {
-    
-    this->targetX = targetX;
-    this->targetY = targetY;
+Enemy::Enemy(
+    // int targetX, int targetY,
+     float speed) {
+    // this->targetX = targetX;
+    // this->targetY = targetY;
     this->speed = speed;
 
-    int centerX = 640;
-    int centerY = 360;
-    int halfLength = 100;
+    // int centerX = 640;
+    // int centerY = 360;
+    // int halfLength = 100;
     int enemyW = 40;
     int enemyH = 40;
-
     // this->spawnX = 540;
     // this->spawnY = 360;
     
@@ -28,7 +27,25 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
     this->spawnY = 1 * 80 + 20;
     if(rand() % 2){
         this->spawnY = 2 * 80 + 20;
+        isPath1 = false;
     }
+    ifstream file;
+    if(isPath1){
+        file.open("assets/enemyPath1.txt");        
+    }else{
+        file.open("assets/enemyPath2.txt");
+    }
+    if (!file) {
+        cerr << "Không thể mở file!\n";
+        return;
+    }
+    posPath target;
+        while (file >> target.x >> target.y){
+            target.x = target.x * 80 + 40;
+            target.y = target.y * 80 + 40;
+            path.push_back(target);
+        }
+    file.close();
 
 
     posX = this->spawnX;
@@ -37,10 +54,24 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
     rect.y = this->spawnY;
     rect.w = enemyW;
     rect.h = enemyH;
+}
 
-    float deltaX = targetX - this->spawnX;
-    float deltaY = targetY - this->spawnY;
-    float length = sqrt(deltaX * deltaX + deltaY * deltaY);
+void Enemy::update(Uint32 dT) {
+    float deltaX = path[pathIndex].x - rect.x;
+    float deltaY = path[pathIndex].y - rect.y;
+    float length = sqrtf(deltaX * deltaX + deltaY * deltaY);
+
+    if(length < 5.0f && pathIndex < int(path.size())){
+        pathIndex++;
+    }
+    if(pathIndex == int(path.size())){
+        // cout<<"tru hp thanh"<<endl; //them tinh năng
+        alive = false;
+        return;
+    }
+    deltaX = path[pathIndex].x - rect.x;
+    deltaY = path[pathIndex].y - rect.y;
+    length = sqrtf(deltaX * deltaX + deltaY * deltaY);
 
     if(length != 0){
         dirX = deltaX / length;
@@ -49,9 +80,8 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
         dirX = 0;
         dirY = 0;
     }
-}
 
-void Enemy::update(Uint32 dT) {
+
     float timeInSec = dT / 1000.f;
     posX += speed * timeInSec * dirX; 
     posY += speed * timeInSec * dirY; 

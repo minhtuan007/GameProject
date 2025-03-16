@@ -36,7 +36,7 @@ void renderFunction();
 void renderText(string text, SDL_Rect destination);
 void renderFPS();
 string fileAssets(string file);
-float enemySpeed = 100;
+float enemySpeed = 500;
 Uint32 lastShoot = SDL_GetTicks();
 
 int main(int argc, char** argv){
@@ -108,7 +108,9 @@ void updateFunction() {
     if (
         enemies.size() < MAX_ENEMIES && 
         rand() % 100 < 2) { // 2% cơ hội sinh kẻ thù mỗi frame
-            enemies.push_back(make_shared<Enemy>(640, 360, enemySpeed)); // Sử dụng std::make_shared
+            enemies.push_back(make_shared<Enemy>(
+                // 640, 360, 
+                enemySpeed)); // Sử dụng std::make_shared
         }
 
     Uint32 currentTime = SDL_GetTicks();
@@ -119,8 +121,9 @@ void updateFunction() {
         (*enemyIt)->update(dT);
 
         if ( (*enemyIt)->isEnemyOutScreen() || !((*enemyIt)->isAlive()) ) {
+            shared_ptr<Enemy> destroyedEnemy = *enemyIt;
             for(auto &tower : towers){
-                tower.removeBulletWithEnemy();
+                tower.removeBulletWithEnemy(destroyedEnemy);
             }
             enemyIt = enemies.erase(enemyIt); // Xóa an toàn với iterator
         } else {

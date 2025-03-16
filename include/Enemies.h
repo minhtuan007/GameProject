@@ -1,7 +1,11 @@
 #pragma once
 #include <SDL.h>
+#include <vector>
+#include <cmath>
+#include <iostream>
+#include <fstream>
 // #include "Tower.h"
-
+using namespace std;
 class Enemy {
 private:
     float speed;
@@ -12,9 +16,18 @@ private:
     int spawnX, spawnY;
     float hp = 100;
     bool alive = true;
+    bool isPath1 = true;
+    struct posPath{
+        int x;
+        int y;
+    };
+    vector<posPath> path;
+    int pathIndex = 0;
 public:    
     // Enemy();       
-    Enemy(int targetX, int targetY, float speed = 2.0f); 
+    Enemy(
+        // int targetX, int targetY, 
+        float speed = 2.0f); 
     void update(Uint32 dT); 
     void render(SDL_Renderer* renderer); 
     bool comeNearTower(SDL_Rect &rectTower, int towerArea);

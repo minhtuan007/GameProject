@@ -118,10 +118,9 @@ void updateFunction() {
     for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();) {
         (*enemyIt)->update(dT);
 
-        if ((*enemyIt)->isEnemyOutScreen()) {
-            shared_ptr<Enemy> destroyedEnemy = (*enemyIt);
+        if ( (*enemyIt)->isEnemyOutScreen() || !((*enemyIt)->isAlive()) ) {
             for(auto &tower : towers){
-                tower.removeBulletWithEnemy(destroyedEnemy);
+                tower.removeBulletWithEnemy();
             }
             enemyIt = enemies.erase(enemyIt); // Xóa an toàn với iterator
         } else {

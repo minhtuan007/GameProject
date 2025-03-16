@@ -39,22 +39,25 @@ void Tower::renderBullet(SDL_Renderer* renderer){
 void Tower::updateBullet(Uint32 dT) {
     for (auto it = bullets.begin(); it != bullets.end();) {
         it->update(dT);
-        if (it->isBulletOutScreen() || it->isEnemyFired()) {
+        if (it->isBulletOutScreen()) {
             it = bullets.erase(it);
-        } else {
+        }else if (it->isEnemyFired()){
+            float hp = (it->getTarget())->getHp();
+            hp = hp - damage;
+            (it->getTarget())->setHp(hp);
+            if((it->getTarget())->getHp() <= 0){
+                (it->getTarget())->kill();
+            }
+            it = bullets.erase(it);
+        } 
+        else {
             ++it;
         }
     }
 }
 
-void Tower::removeBulletWithEnemy(shared_ptr<Enemy> destroyedEnemy) {
-    for (auto it = bullets.begin(); it != bullets.end();) {
-        if (it->getTarget() == destroyedEnemy) {
-            it = bullets.erase(it);
-        } else {
-            ++it;
-        }
-    }
+void Tower::removeBulletWithEnemy() {
+    bullets.clear();
 }
 
 void Tower::getTowerRect(int &posX, int &posY, int &towerW, int &towerH){

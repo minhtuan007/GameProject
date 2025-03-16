@@ -18,11 +18,17 @@ Enemy::Enemy(int targetX, int targetY, float speed) {
     // this->spawnY = 360;
     
 
-    do {
-        this->spawnX = rand() % 1280;
-        this->spawnY = rand() % 720;
-    } while (   this->spawnX > centerX - halfLength && this->spawnY > centerY - halfLength &&
-                this->spawnX < centerX + halfLength && this->spawnY < centerY + halfLength );
+    // do {
+        
+    //     this->spawnX = rand() % 1280;
+    //     this->spawnY = rand() % 720;
+    // } while (   this->spawnX > centerX - halfLength && this->spawnY > centerY - halfLength &&
+    //             this->spawnX < centerX + halfLength && this->spawnY < centerY + halfLength );
+    this->spawnX = 0;
+    this->spawnY = 1 * 80 + 20;
+    if(rand() % 2){
+        this->spawnY = 2 * 80 + 20;
+    }
 
 
     posX = this->spawnX;

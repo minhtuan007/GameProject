@@ -46,6 +46,7 @@ bool Bullet::isBulletOutScreen() {
 
 bool Bullet::isEnemyFired() {
     if (!target) return false;
-    SDL_Rect enemyRect = { target->getPosX(), target->getPosY(), target->getPosW(), target->getPosH() };
+    SDL_Rect enemyRect = { target->getPosX(), target->getPosY(), target->getPosW(), target->getPosH()};
     return SDL_HasIntersection(&rectBullet, &enemyRect);
 }
+

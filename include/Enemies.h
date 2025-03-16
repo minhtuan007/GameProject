@@ -10,6 +10,8 @@ private:
     int targetX, targetY;
     float dirX, dirY;
     int spawnX, spawnY;
+    float hp = 100;
+    bool alive = true;
 public:    
     // Enemy();       
     Enemy(int targetX, int targetY, float speed = 2.0f); 
@@ -17,12 +19,13 @@ public:
     void render(SDL_Renderer* renderer); 
     bool comeNearTower(SDL_Rect &rectTower, int towerArea);
     bool isEnemyOutScreen();
-    // int getTowerArea(){return towerArea;};
     int getPosX(){return this->rect.x;};
     int getPosY(){return this->rect.y;};
     int getPosW(){return this->rect.w;};
     int getPosH(){return this->rect.h;};
-    // int getTowerArea(){return towerArea;};
-    // int getTowerArea(){return towerArea;};
+    float getHp(){return this->hp;};
+    void  setHp(float newHp){this->hp = newHp;};
+    bool  isAlive(){return alive;};
+    void  kill(){alive = false;};
 };
 

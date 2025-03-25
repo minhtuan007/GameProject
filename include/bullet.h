@@ -22,6 +22,7 @@ public:
     void render(SDL_Renderer* renderer);
     bool isBulletOutScreen();
     bool isEnemyFired();
+    // float getTargetSpeed() const {return targetSpeed;};
     shared_ptr<Enemy> getTarget(){return target;};
 };
 

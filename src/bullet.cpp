@@ -7,6 +7,7 @@ Bullet::Bullet(int startX, int startY, float speed, shared_ptr<Enemy> target)
         targetX = target->getPosX() + target->getPosW() / 2;
         targetY = target->getPosY() + target->getPosH() / 2;
     }
+    // this->targetSpeed = target->getSpeed();
 }
 
 void Bullet::update(Uint32 dT) {

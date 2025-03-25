@@ -1,25 +1,51 @@
 #include"Tower.h"
 
-void Tower::setTower(int posX, int posY){
-    const int towerW = 20 ;
-    const int towerH = 40;
+Tower::Tower(){
+    // towerArea = 200;
+    // bulletSpeed = 500;
+    // lastShoot = 0;
+    // damage = 20;
+    // type = "";
+    // iceType = "ice";
+    // normalType = "normal";
+    // iceTowerCoin = 80;
+    // normalTowerCoin = 50;
+    // buying = "";
+    // slowDown = 1;
+};
+
+void Tower::setTower(int posX, int posY, float slowDown, string type){
+    const int towerW = 80 ;
+    const int towerH = 80;
+    //lấy vị trí là tâm của 1 tile
+    posX = (int(posX / tileSize) * tileSize + (tileSize / 2)) ;
+    posY = (int(posY / tileSize) * tileSize + (tileSize / 5)) ;
     rectTower = {
-        posX - (towerW / 2), posY - (towerH / 2), // Spawn tháp sao cho con trỏ chuột trùng tâm tháp
+        posX - (towerW / 2), posY - (towerH / 2), // Spawn tháp sao cho tâm tháp trùng tâm của tile
         towerW, towerH
     };
     this->posX = posX;
     this->posY = posY;
+    this->slowDown = slowDown;
+    this->type = type;
 }
 
-void Tower::render( SDL_Renderer *renderer){
-    filledCircleColor(renderer, posX, posY, towerArea, 0x11BDF1CC);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    SDL_RenderFillRect(renderer, &rectTower);
+void Tower::render(SDL_Renderer* renderer, Draw& draw) {
+    if (type == normalType) {
+        filledCircleColor(renderer, posX, posY, towerArea, 0x2c9ae9b3);
+        draw.drawTexture(normalType, posX - (rectTower.w / 2), posY - (rectTower.h / 2),
+                            rectTower.w, rectTower.h);
+    } else if (type == iceType) {
+        filledCircleColor(renderer, posX, posY, towerArea, 0x2c9ae9b3);
+        //Tăng kích thước cho tháp băng 1 chút
+        draw.drawTexture("iceTower", posX - (rectTower.w / 2) - 15, posY - (rectTower.h / 2) - 15,
+                            rectTower.w + 30 , rectTower.h + 30 );
+    }
 }
 
 void Tower::shootEnemy(shared_ptr<Enemy> target, Uint32 currentTime) {
     if (!target) return;
-    const Uint32 SHOOT_COOLDOWN = 300;  // ms giữa các lần bắn
+    const Uint32 SHOOT_COOLDOWN = 300;  
     if (currentTime - lastShoot >= SHOOT_COOLDOWN) {
         int posBulletX = rectTower.x + rectTower.w / 2;
         int posBulletY = rectTower.y;
@@ -36,19 +62,30 @@ void Tower::renderBullet(SDL_Renderer* renderer){
 
 
 
-void Tower::updateBullet(Uint32 dT) {
+void Tower::updateBullet(Uint32 dT, Map& gameMap) {
     for (auto it = bullets.begin(); it != bullets.end();) {
         it->update(dT);
         if (it->isBulletOutScreen()) {
             it = bullets.erase(it);
         }else if (it->isEnemyFired()){
-            float hp = (it->getTarget())->getHp();
-            hp = hp - damage;
-            (it->getTarget())->setHp(hp);
-            if((it->getTarget())->getHp() <= 0){
-                (it->getTarget())->kill();
+            //trừ speed
+            if(type == iceType){
+                float newEnemySpeed = (it->getTarget())->getSpeed();
+                newEnemySpeed = newEnemySpeed * slowDown;
+                (it->getTarget())->setSpeed(newEnemySpeed);
+                it = bullets.erase(it);
             }
-            it = bullets.erase(it);
+            // trừ hp
+            else if(type == normalType){
+                float hp = (it->getTarget())->getHp();
+                hp = hp - damage;
+                (it->getTarget())->setHp(hp);
+                if((it->getTarget())->getHp() <= 0){
+                    (it->getTarget())->kill();
+                    gameMap.setCoin( gameMap.getCoin() + gameMap.getPrize() );
+                }
+                it = bullets.erase(it);
+            }
         } 
         else {
             ++it;
@@ -72,4 +109,34 @@ void Tower::getTowerRect(int &posX, int &posY, int &towerW, int &towerH){
     posY = this->rectTower.y;
     towerW = this->rectTower.w;
     towerH = this->rectTower.h;
+}
+
+bool Tower::isEnoughCoin(int coin, string towerType){
+    if(towerType == iceType){
+        return coin >= iceTowerCoin;
+    }
+    return coin >= normalTowerCoin;
+}
+
+void Tower::payment(Map& gameMap, string towerType){
+    if(towerType == iceType){
+        gameMap.setCoin(gameMap.getCoin() - iceTowerCoin);
+    }else if(towerType == normalType){
+        gameMap.setCoin(gameMap.getCoin() - normalTowerCoin);
+    }
+}
+
+bool Tower::buyTower(int x, int y){
+    if(x >= 5 && y >= 450 && x < 115 && y < 560){
+        buying = iceType;
+        return true;
+    }else if(x >= 5 && y >= 567 && x < 110 && y <675){
+        buying = normalType;
+        return true;
+    }
+    return false;
+}
+
+void Tower::resetBullet(){
+    bullets.clear();
 }

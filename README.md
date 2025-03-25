@@ -173,3 +173,14 @@ Thêm menu chính (Start, Quit).
 Thêm âm thanh (bắn, kẻ thù chết).
 Thêm hiệu ứng (nổ khi kẻ thù chết).
 Kết quả: Game hoàn chỉnh, sẵn sàng chơi.
+
+
+
+
+chia ra các wave
+-> sau s giây sẽ xuất hiện wave địch thứ n
+mỗi wave sẽ random số lượng địch còn song là e
+mỗi wave sẽ kéo dài trong s giây
+
+càng lên lv, số lượng đặt tháp pháo sẽ giảm hoặc số lượng địch sẽ tăng
+

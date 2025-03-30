@@ -1,22 +1,17 @@
 #include"Tower.h"
 
-Tower::Tower(){
-    // towerArea = 200;
-    // bulletSpeed = 500;
-    // lastShoot = 0;
-    // damage = 20;
-    // type = "";
-    // iceType = "ice";
-    // normalType = "normal";
-    // iceTowerCoin = 80;
-    // normalTowerCoin = 50;
-    // buying = "";
-    // slowDown = 1;
+Tower::Tower(Map& gameMap){
+    baseCoin = gameMap.getBasePrice();
+    iceTowerCoin = gameMap.getIceTowerPrice();
+    normalTowerCoin = gameMap.getNormalTowerPrice();
+    iceDamage = gameMap.getIceDamage();
+    damage = gameMap.getNormalDamage();
 };
 
 void Tower::setTower(int posX, int posY, float slowDown, string type){
     const int towerW = 80 ;
     const int towerH = 80;
+
     //lấy vị trí là tâm của 1 tile
     posX = (int(posX / tileSize) * tileSize + (tileSize / 2)) ;
     posY = (int(posY / tileSize) * tileSize + (tileSize / 5)) ;
@@ -73,6 +68,10 @@ void Tower::updateBullet(Uint32 dT, Map& gameMap) {
                 float newEnemySpeed = (it->getTarget())->getSpeed();
                 newEnemySpeed = newEnemySpeed * slowDown;
                 (it->getTarget())->setSpeed(newEnemySpeed);
+
+                float hp = (it->getTarget())->getHp();
+                hp = hp - iceDamage;
+                (it->getTarget())->setHp(hp);
                 it = bullets.erase(it);
             }
             // trừ hp
@@ -80,11 +79,12 @@ void Tower::updateBullet(Uint32 dT, Map& gameMap) {
                 float hp = (it->getTarget())->getHp();
                 hp = hp - damage;
                 (it->getTarget())->setHp(hp);
-                if((it->getTarget())->getHp() <= 0){
-                    (it->getTarget())->kill();
-                    gameMap.setCoin( gameMap.getCoin() + gameMap.getPrize() );
-                }
                 it = bullets.erase(it);
+            }
+
+            if((it->getTarget())->getHp() <= 0){
+                (it->getTarget())->kill();
+                gameMap.setCoin( gameMap.getCoin() + gameMap.getPrize() );
             }
         } 
         else {
@@ -101,7 +101,6 @@ void Tower::removeBulletWithEnemy(shared_ptr<Enemy> destroyedEnemy) {
             ++it;
         }
     }
-    // bullets.clear();
 }
 
 void Tower::getTowerRect(int &posX, int &posY, int &towerW, int &towerH){
@@ -114,7 +113,10 @@ void Tower::getTowerRect(int &posX, int &posY, int &towerW, int &towerH){
 bool Tower::isEnoughCoin(int coin, string towerType){
     if(towerType == iceType){
         return coin >= iceTowerCoin;
+    }else if(towerType == base){
+        return coin >= baseCoin;
     }
+
     return coin >= normalTowerCoin;
 }
 
@@ -124,14 +126,21 @@ void Tower::payment(Map& gameMap, string towerType){
     }else if(towerType == normalType){
         gameMap.setCoin(gameMap.getCoin() - normalTowerCoin);
     }
+    else if(towerType == base){
+        gameMap.setCoin(gameMap.getCoin() - baseCoin);
+    }
 }
 
-bool Tower::buyTower(int x, int y){
-    if(x >= 5 && y >= 450 && x < 115 && y < 560){
+bool Tower::buyItem(int x, int y){
+    if(x >= 5 && y >= 480 && x <= 100 && y <= 570){
         buying = iceType;
         return true;
-    }else if(x >= 5 && y >= 567 && x < 110 && y <675){
+    }else if(x >= 5 && y >= 580 && x <= 100 && y <= 675){
         buying = normalType;
+        return true;
+    }
+    else if(x >= 5 && y >= 385 && x <= 100 && y <= 470){
+        buying = base;
         return true;
     }
     return false;

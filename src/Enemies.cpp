@@ -1,31 +1,32 @@
 #include "Enemies.h"
 
 using namespace std;
-Enemy::Enemy(float speed) {
+Enemy::Enemy(string enemyPathFile1, string enemyPathFile2, Map& gameMap) {
    
-    this->initSpeed = speed;
+    this->initSpeed = gameMap.getInitEnemySpeed();
     currentSpeed = initSpeed;
-
+    hp = gameMap.getInitEnemyHP();
     
     int enemyW = 40;
     int enemyH = 40;
 
-    this->spawnX = 0;
-    this->spawnY = 1 * 80;
+    isPath1 = true;
     if(rand() % 2){
-        this->spawnY = 2 * 80 - 20;
         isPath1 = false;
     }
     ifstream file;
     if(isPath1){
-        file.open("assets/enemyPath1.txt");        
+        file.open(enemyPathFile1);        
     }else{
-        file.open("assets/enemyPath2.txt");
+        file.open(enemyPathFile2);
     }
     if (!file) {
         cerr << "Không thể mở file!\n";
         return;
     }
+    file >> this->spawnX >> this->spawnY;
+    this->spawnX = this->spawnX * 80 - 15;
+    this->spawnY = this->spawnY * 80 - 15;
     posPath target;
         while (file >> target.x >> target.y){
             target.x = target.x * 80 - 15;
@@ -182,6 +183,12 @@ bool Enemy::comeNearTower(SDL_Rect &rectTower, int towerArea) {
 }
 
 bool Enemy::isEnemyOutScreen(){
-        return rect.x < -10 || rect.x > 1290 || rect.y < -10 || rect.y > 730;
+    
+        if( rect.x < -15 || rect.x > 1290 || rect.y < -15 || rect.y > 730){
+            cout << "out" << endl;
+            cout << rect.x << " " << rect.y << endl;
+            return true;
+        }
+        return false;
 }
 

@@ -21,7 +21,7 @@ Map::Map() : used(MAPH, vector<int>(MAPW, 0)){
 Map::~Map() {
     for (int i = 0; i < MAPH; i++) {
         for (int j = 0; j < MAPW; j++) {
-            if (tileTextures[i][j]) {
+            if (tileTextures[i][j] != nullptr) {
                 SDL_DestroyTexture(tileTextures[i][j]);
                 tileTextures[i][j] = nullptr;
             }
@@ -29,7 +29,7 @@ Map::~Map() {
     }
     for (int i = 0; i < MAPH * 2; i++) {
         for (int j = 0; j < MAPW * 2; j++) {
-            if (graphic[i][j]) {
+            if (graphic[i][j] != nullptr) {
                 SDL_DestroyTexture(graphic[i][j]);
                 graphic[i][j] = nullptr;
             }
@@ -37,10 +37,10 @@ Map::~Map() {
     }
 }
 
-bool Map::loadMap(string inputName, SDL_Renderer* renderer) {
-    ifstream file(inputName);
+bool Map::loadMap(SDL_Renderer* renderer) {
+    ifstream file(mapFile);
     if (!file) {
-        cerr << "Khong the mo file: " << inputName << endl;
+        cerr << "Khong the mo file: " << mapFile << endl;
         return false;
     }
 
@@ -72,7 +72,6 @@ bool Map::loadMap(string inputName, SDL_Renderer* renderer) {
     }
     Fgraphic.close();
 
-    string basePath = "D:/laptrinh/LTNC/Code/GameProject/assets/Map/Tiles/";
 // Tải tileTextures
     for (int i = 0; i < MAPH; i++) {
         for (int j = 0; j < MAPW; j++) {
@@ -165,17 +164,125 @@ bool Map::isValidToSet(int tempX, int tempY){
     if(mapInfo[tileY][tileX] == "tile_0043.png"){
         return true;
     }
-    cout<<"Not valid to set a Tower"<<endl;
     return false;
 }
 
-void Map::resetMap(){
-    coin = 50;
-    prize = 10;
-    fortressHP = 100;
+void Map::resetMap(SDL_Renderer* renderer){
+    coin = initCoin;
+    fortressHP = initFortressHP;
+    numBase = 0;
     for(int i = 0; i < MAPH; i++){
         for(int j = 0; j < MAPW; j++){
             used[i][j] = 0;
         }
     }
+    loadMap(renderer);
+}
+
+void Map::changeTileTexture(int tempX, int tempY, SDL_Renderer* renderer){
+    numBase +=1;
+    int tileX = tempX / tileSize;
+    int tileY = tempY / tileSize;
+    if (tileTextures[tileY][tileX] != NULL) {
+        SDL_DestroyTexture(tileTextures[tileY][tileX]); 
+        tileTextures[tileY][tileX] = NULL;
+    }
+    SDL_Surface* baseSur = IMG_Load((basePath + "tile_0043.png").c_str());
+    if (!baseSur) {
+        cerr << "Khong the load anh: " << IMG_GetError() << endl;
+        return;
+    }
+    SDL_Texture* baseTexture = SDL_CreateTextureFromSurface(renderer, baseSur);
+    SDL_FreeSurface(baseSur);
+    if (!baseTexture) {
+        cerr << "Khong the tao texture tu surface cho anh: " << SDL_GetError() << endl;
+        return;
+    }
+    tileTextures[tileY][tileX] = baseTexture;
+    mapInfo[tileY][tileX] = "tile_0043.png";
+}
+
+int Map::remainBase(int tempX, int tempY){
+    int tileX = tempX / tileSize;
+    int tileY = tempY / tileSize;
+    if(mapInfo[tileY][tileX] == "tile_0012.png" || mapInfo[tileY][tileX] == "tile_0013.png" || mapInfo[tileY][tileX] == "tile_0014.png" 
+        || mapInfo[tileY][tileX] == "tile_0024.png" || mapInfo[tileY][tileX] == "tile_0025.png" || mapInfo[tileY][tileX] == "tile_0026.png"
+        || mapInfo[tileY][tileX] == "tile_0036.png" || mapInfo[tileY][tileX] == "tile_0037.png" || mapInfo[tileY][tileX] == "tile_0038.png"
+        || mapInfo[tileY][tileX] == "tile_0039.png" || mapInfo[tileY][tileX] == "tile_0040.png" || mapInfo[tileY][tileX] == "tile_0041.png" 
+        || mapInfo[tileY][tileX] == "tile_0042.png"){
+
+        return -1;
+    }
+    return level.limitBase - numBase;
+}
+
+bool Map::loadLevelInfo(string inputName){
+    ifstream file(inputName);
+    if (!file) {
+        cerr << "Khong the mo file: " << inputName << endl;
+        return false;
+    }
+    if(!(file >> initEnemyHP)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+
+    if(!(file >> initEnemySpeed)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+
+    if(!(file >> initFortressHP)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+    fortressHP = initFortressHP;
+
+    if(!(file >> initCoin)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+    coin = initCoin;
+
+    if(!(file >> prize)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+    if(!(file >> level.limitBase)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+    if(!(file >> level.vectorNum)){
+        cerr << "khong the nap loadLevelInfo" << endl;
+        return false;
+    }
+    
+    Uint32 tempVar;
+    for(int i = 0; i < level.vectorNum; ++i){
+        if(!(file >> tempVar)){
+            cerr << "khong the nap loadLevelInfo" << endl;
+            return false;
+        }
+        level.startWave.push_back(tempVar);
+    }
+
+    for(int i = 0; i < level.vectorNum; ++i){
+        if(!(file >> tempVar)){
+            cerr << "khong the nap loadLevelInfo" << endl;
+            return false;
+        }
+        level.waveLength.push_back(tempVar);    
+    }
+
+    for(int i = 0; i < level.vectorNum; ++i){
+        if(!(file >> tempVar)){
+            cerr << "khong the nap loadLevelInfo" << endl;
+            return false;
+        }
+        level.enemyNum.push_back(tempVar);    
+    }
+    
+    
+    file.close();
+    return true;
 }

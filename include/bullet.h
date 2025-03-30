@@ -1,9 +1,11 @@
 #pragma once
 #include<SDL.h>
 #include<cmath>
-#include"Enemies.h"
 #include<iostream>
 #include <memory>
+
+#include "Enemies.h"
+
 using namespace std;
 class Bullet{
 private:
@@ -22,7 +24,6 @@ public:
     void render(SDL_Renderer* renderer);
     bool isBulletOutScreen();
     bool isEnemyFired();
-    // float getTargetSpeed() const {return targetSpeed;};
     shared_ptr<Enemy> getTarget(){return target;};
 };
 

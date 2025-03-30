@@ -179,8 +179,13 @@ Kết quả: Game hoàn chỉnh, sẵn sàng chơi.
 
 chia ra các wave
 -> sau s giây sẽ xuất hiện wave địch thứ n
-mỗi wave sẽ random số lượng địch còn song là e
+mỗi wave sẽ random số lượng địch còn sống là e
 mỗi wave sẽ kéo dài trong s giây
 
 càng lên lv, số lượng đặt tháp pháo sẽ giảm hoặc số lượng địch sẽ tăng
 
+10 level
+
+1.
+3 wave, mỗi wave 5 - 7 enemy, mỗi wave 30 giây, nghỉ 10s
+4 tháp

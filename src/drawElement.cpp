@@ -34,13 +34,12 @@ void Draw::loadTexture(const string& key, const string& filePath) {
         return;
     }
 
-
     // Lưu texture vào map với shared_ptr
     textures[key] = shared_ptr<SDL_Texture>(texture, SDL_DestroyTexture);
     
 }
 
-void Draw::drawTexture(const string& key, int x, int y, int w, int h) {
+void Draw::drawTexture(const string& key, int x, int y, int w, int h, bool setLogicalSize) {
     auto it = textures.find(key);
     if (it == textures.end()) {
         cerr << "Texture with key " << key << " not found!" << endl;
@@ -54,7 +53,9 @@ void Draw::drawTexture(const string& key, int x, int y, int w, int h) {
     if (h == 0) {
         SDL_QueryTexture(it->second.get(), nullptr, nullptr, nullptr, &dstRect.h);
     }
-
+    if(setLogicalSize){
+        SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
     SDL_RenderCopy(renderer, it->second.get(), nullptr, &dstRect);
 }
 
@@ -65,12 +66,24 @@ bool Draw::clickListBtn(int x, int y){
     return false;
 }
 
-
+bool Draw::clickInfoBtn(int x, int y){
+    if(x >= 1240 && x <= 1240 + 30 && y >= 40 && y <= 40 + 30){
+        return true;
+    }
+    return false;
+}
+//610, 475, 80, 35
+bool Draw::clickInfo_BackBtn(int x, int y){
+    if(x >= 580 && x <= 580 + 140 && y >= 590 && y <= 590 + 60){
+        return true;
+    }
+    return false;
+}
 
 void Draw::renderListBtn(int coin, TTF_Font* typeFont){
     if(slider.isVisible){
-        drawTexture("list", 0, SCREEN_HEIGHT - 308 - BTN_HEIGHT, 120, 308);
-        SDL_Rect dst = {42, 395, 40, 70};
+        drawTexture("list", 0, SCREEN_HEIGHT - BTN_HEIGHT - 360, 0, 0);
+        SDL_Rect dst = {37, 337, 40, 50};
         renderText(to_string(coin), dst, typeFont);
     }
 
@@ -93,40 +106,3 @@ void Draw::renderText(string text, SDL_Rect destination, TTF_Font* typeFont) {
 
 
 
-
-
-
-
-
-
-// void Draw::drawTexturePart(const string& key, int x, int y, int srcX, int srcY, int srcW, int srcH, int dstW, int dstH) {
-//     auto it = textures.find(key);
-//     if (it == textures.end()) {
-//         cerr << "Texture with key " << key << " not found!" << endl;
-//         return;
-//     }
-
-//     SDL_Rect srcRect = {srcX, srcY, srcW, srcH};
-//     SDL_Rect dstRect = {x, y, dstW, dstH};
-//     if (dstW == 0 || dstH == 0) {
-//         dstRect.w = srcRect.w;
-//         dstRect.h = srcRect.h;
-//     }
-
-//     SDL_RenderCopy(renderer, it->second.get(), &srcRect, &dstRect);
-// }
-
-// void Draw::drawTextureEx(const string& key, int x, int y, int w, int h, double angle, SDL_RendererFlip flip) {
-//     auto it = textures.find(key);
-//     if (it == textures.end()) {
-//         cerr << "Texture with key " << key << " not found!" << endl;
-//         return;
-//     }
-
-//     SDL_Rect dstRect = {x, y, w, h};
-//     if (w == 0 || h == 0) {
-//         SDL_QueryTexture(it->second.get(), nullptr, nullptr, &dstRect.w, &dstRect.h);
-//     }
-
-//     SDL_RenderCopyEx(renderer, it->second.get(), nullptr, &dstRect, angle, nullptr, flip);
-// }

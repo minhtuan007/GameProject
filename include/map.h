@@ -23,14 +23,36 @@ private:
     SDL_Texture* tileTextures[MAPH][MAPW]; 
     SDL_Texture* graphic[MAPH*2][MAPW*2]; 
     string graphicInfo[MAPH*2][MAPW*2]; 
-    string graphicFile = "D:/laptrinh/LTNC/Code/GameProject/assets/graphic.txt";
-    int coin = 50;
-    int prize = 10;
-    float fortressHP = 100;
+    string graphicFile = "";
+    string mapFile = "";
+    string basePath = "D:/laptrinh/LTNC/Code/GameProject/assets/Map/Tiles/";
+    int initCoin;
+    float initFortressHP;
+    float initEnemyHP;
+    float initEnemySpeed;
+    int coin;
+    int prize;
+    float fortressHP;
+    int numBase = 0;
+    int baseCoin = 50;
+    int iceTowerCoin = 100;
+    float iceDamage = 5;
+
+    int normalTowerCoin = 70;
+    float damage = 20;
+    struct LEVEL_INFO{
+        int limitBase;
+        int vectorNum;
+        vector<Uint32> startWave;
+        vector<Uint32> waveLength;
+        vector<Uint32> enemyNum;
+    };
 public:
     Map();                              
     ~Map();                            
-    bool loadMap(string inputName, SDL_Renderer* renderer); 
+    bool loadLevelInfo(string inputName);
+    LEVEL_INFO level;
+    bool loadMap(SDL_Renderer* renderer); 
     void renderMap(SDL_Renderer* renderer);
     int hasTower(int tempX, int tempY);
     void setUsedTile(int tempX, int tempY);
@@ -39,7 +61,20 @@ public:
     void setCoin(int coin) {this->coin = coin;};
     int getPrize() const {return prize;};
     float getFortressHP() {return fortressHP;};
+    float getInitFortressHP() {return initFortressHP;};
+    float getInitEnemyHP() {return initEnemyHP;};
+    float getInitEnemySpeed() {return initEnemySpeed;};
+    int getLimitBase() {return level.limitBase;};
     void setFortressHP(float newHP) {fortressHP = newHP;};
-    void resetMap();
-    // int getTileSize() const {return tileSize;};
+    void changeTileTexture(int tempX, int tempY, SDL_Renderer* renderer);
+    void resetMap(SDL_Renderer* renderer);
+    int remainBase(int tempX, int tempY);
+    void setMapFile(string mapFile) {this->mapFile = mapFile;};
+    void setGraphicFile(string graphicFile) {this->graphicFile = graphicFile;};
+    int getBasePrice() const {return baseCoin;};
+    int getIceTowerPrice() const {return iceTowerCoin;};
+    int getIceDamage() const {return iceDamage;};
+    int getNormalTowerPrice() const {return normalTowerCoin;};
+    int getNormalDamage() const {return damage;};
+
 };

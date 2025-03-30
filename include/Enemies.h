@@ -4,9 +4,9 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
-#include "drawElement.h" 
 
-// #include "Tower.h"
+#include "drawElement.h" 
+#include "map.h"
 using namespace std;
 class Enemy {
 private:
@@ -15,7 +15,7 @@ private:
     int targetX, targetY;
     float dirX, dirY;
     int spawnX, spawnY;
-    float hp = 100;
+    float hp;
     bool alive = true;
     bool isPath1 = true;
     struct posPath{
@@ -35,9 +35,7 @@ private:
     Uint32 lastUpdate = 0; // Biến thành viên để lưu thời điểm cập nhật cuối
 public:    
     // Enemy();       
-    Enemy(
-        // int targetX, int targetY, 
-        float speed = 500.0f); 
+    Enemy(string enemyPathFile1, string enemyPathFile2, Map& gameMap); 
     void update(Uint32 dT, float& fortressHP); 
     void render(Uint32 runningTime, Draw& draw); 
     bool comeNearTower(SDL_Rect &rectTower, int towerArea);

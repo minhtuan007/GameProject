@@ -41,14 +41,8 @@ public:
     bool clickListBtn(int x, int y);
     bool clickInfoBtn(int x, int y);
     bool clickInfo_BackBtn(int x, int y);
-    // void openListBtn(Uint32 currentTime);
     void renderListBtn(int coin, TTF_Font* typeFont);
     void toggleIsVisible() {slider.isVisible = !slider.isVisible;}
     bool getIsVisible() const {return slider.isVisible;}
-    // void updateSlider(Slider* slider, Uint32 currentTime);
-    // // Vẽ một phần của texture (dành cho sprite sheet)
-    // void drawTexturePart(const string& key, int x, int y, int srcX, int srcY, int srcW, int srcH, int dstW = 0, int dstH = 0);
-
-    // // Vẽ texture với xoay và lật
-    // void drawTextureEx(const string& key, int x, int y, int w, int h, double angle, SDL_RendererFlip flip = SDL_FLIP_NONE);
+    
 };

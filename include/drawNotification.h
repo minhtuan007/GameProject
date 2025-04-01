@@ -25,7 +25,7 @@ private:
 
 public:
     Notification();
-    Notification(SDL_Renderer* renderer); // Thêm constructor với renderer
-    void setNotif(string text, int x, int y, int w, int h, Uint32 startTime = 0); // startTime mặc định là 0
+    Notification(SDL_Renderer* renderer); 
+    void setNotif(string text, int x, int y, int w, int h, Uint32 startTime = 0); 
     void updateAndShow(TTF_Font* typeFont); // Gộp update và show thành một hàm
 };

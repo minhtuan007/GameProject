@@ -16,7 +16,11 @@ void Tower::setTower(int posX, int posY, float slowDown, string type){
     posX = (int(posX / tileSize) * tileSize + (tileSize / 2)) ;
     posY = (int(posY / tileSize) * tileSize + (tileSize / 5)) ;
     rectTower = {
-        posX - (towerW / 2), posY - (towerH / 2), // Spawn tháp sao cho tâm tháp trùng tâm của tile
+        posX
+        //  - (towerW / 2)
+         , posY 
+        //  - (towerH / 2)
+         , // Spawn tháp sao cho tâm tháp trùng tâm của tile
         towerW, towerH
     };
     this->posX = posX;

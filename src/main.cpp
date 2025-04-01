@@ -51,6 +51,8 @@ bool flagReadFile = false;
 Uint32 lastTime;
 Uint32 runningTime = 0;
 float fortressHP;
+bool flagWaveInfo = false;
+Uint32 waveInfoTime = 0;
 
 int levelWidth = 100;
 int levelNum = 5;
@@ -271,6 +273,10 @@ void updateFunction() {
         lastTime = currentTime;
         if(runningTime >= (gameMap.level.startWave[levelIndex] + gameMap.level.waveLength[levelIndex]) * 1000 && flagRunningTime){
             levelIndex += 1;
+            if(levelIndex < gameMap.level.vectorNum){
+                flagWaveInfo = true;
+                waveInfoTime = SDL_GetTicks();
+            }
             flagRunningTime = false;
         }
 
@@ -336,9 +342,18 @@ void renderFunction() {
             towers[i].renderBullet(renderer);
         }
 
+        if(flagWaveInfo){
+            if(SDL_GetTicks() - waveInfoTime < 3000){//2 giây
+                string waveInfo = "Wave " + to_string(levelIndex) + " - Start Time: " + to_string(gameMap.level.startWave[levelIndex]) +
+                " - Duration: " + to_string(gameMap.level.waveLength[levelIndex]) + " seconds";
+                SDL_Rect waveInfoDst = {330, 310, 0, 0};
+                draw.renderText(waveInfo, waveInfoDst, font);
+            }else{
+                flagWaveInfo = false;
+            }
+        }
         notification.updateAndShow(font);
-        // notif.showNotif("Đã Mua", 1110, 200, 170, 50, font, "notification");
-        // draw.drawTexture("notification", 1110, 200, 170, 50);
+    
 
         if(!draw.getIsVisible()){
         draw.drawTexture("showlist", 0, draw.SCREEN_HEIGHT - draw.BTN_HEIGHT, draw.BTN_WIDTH, draw.BTN_HEIGHT);
@@ -578,8 +593,9 @@ void resetGame(){
     selectedTowerType = "";
     canSetBase = true;
     levelIndex = 0;
-    flagRunningTime = false;
+    flagRunningTime = true;
     flagReadFile = false;
+    flagWaveInfo = false;
 }
 
 int checkLevel(int tempX, int tempY){

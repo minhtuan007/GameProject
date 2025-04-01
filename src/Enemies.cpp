@@ -7,8 +7,8 @@ Enemy::Enemy(string enemyPathFile1, string enemyPathFile2, Map& gameMap) {
     currentSpeed = initSpeed;
     hp = gameMap.getInitEnemyHP();
     
-    int enemyW = 40;
-    int enemyH = 40;
+    int enemyW = 90;
+    int enemyH = 90;
 
     isPath1 = true;
     if(rand() % 2){
@@ -88,8 +88,8 @@ void Enemy::update(Uint32 dT, float& fortressHP) {
 void Enemy::render(Uint32 runningTime, Draw& draw) {
     int charX = rect.x;
     int charY = rect.y;
-    int charW = rect.h + 50;
-    int charH = rect.w + 50;
+    int charW = rect.h;
+    int charH = rect.w;
     runningTime = runningTime / 100;
     if(forward && !explode){
         switch (runningTime % 6)
@@ -171,15 +171,14 @@ void Enemy::render(Uint32 runningTime, Draw& draw) {
 bool Enemy::comeNearTower(SDL_Rect &rectTower, int towerArea) {
     int enemyX = rect.x + rect.w / 2;
     int enemyY = rect.y + rect.h / 2;
-
-    int towerPosX = rectTower.x + rectTower.w / 2;
-    int towerPosY = rectTower.y + rectTower.h / 2;
+    int towerPosX = rectTower.x;
+    int towerPosY = rectTower.y;
     float distanceX = abs(enemyX - towerPosX);
     float distanceY = abs(enemyY - towerPosY);
 
 
     float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-    return (distance - rect.w / 3 < towerArea);
+    return (distance < towerArea);
 }
 
 bool Enemy::isEnemyOutScreen(){

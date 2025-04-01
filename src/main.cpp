@@ -9,6 +9,7 @@
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include<SDL_image.h>
+#include<SDL_mixer.h>
 
 #include "Enemies.h"
 #include "Tower.h"
@@ -23,6 +24,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 TTF_Font* font;
 TTF_Font* font12;
+Mix_Music* music;
 bool isRunning = true;
 string selectedTowerType = "";
 float slowDown = 1;
@@ -499,6 +501,22 @@ bool init() {
         return false;
     }
 
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        cerr << "SDL_mixer could not initialize: " << Mix_GetError() << endl;
+        return false;
+    }
+
+    music = Mix_LoadMUS(fileAssets("gameMusic.mp3").c_str());
+    if(!music){
+        cerr << "Can not load music: " << Mix_GetError() << endl;
+        return false;   
+    }
+
+    if(Mix_PlayMusic(music, -1) != 0){ //return -1 if it failed
+        cerr << "Can not play background music: " << Mix_GetError() << endl;
+        return false;
+    }
+
 
     draw = Draw(renderer);
     draw.loadTexture("iceTower", fileAssets("iceTower.png"));
@@ -544,11 +562,14 @@ void kill() {
     SDL_DestroyRenderer(renderer);
     TTF_CloseFont(font);
     TTF_CloseFont(font12);
+    Mix_FreeMusic(music);
+    music = NULL;
     font = NULL;
     font12 = NULL;
     renderer = NULL;
     window = NULL;
     TTF_Quit();
+    Mix_Quit();
     SDL_Quit();
 }
 

@@ -528,8 +528,8 @@ bool init() {
 
 
     draw = Draw(renderer);
-    draw.loadTexture("iceTower", fileAssets("iceTower.png"));
-    draw.loadTexture("normal", fileAssets("normal.png"));
+    draw.loadTexture("Ice", fileAssets("iceTower.png"));
+    draw.loadTexture("Normal", fileAssets("normal.png"));
     draw.loadTexture("showlist", fileAssets("showlist.png"));
     draw.loadTexture("hidelist", fileAssets("hidelist.png"));
     draw.loadTexture("list", fileAssets("list.png"));

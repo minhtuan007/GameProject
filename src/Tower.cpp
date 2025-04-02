@@ -36,7 +36,7 @@ void Tower::render(SDL_Renderer* renderer, Draw& draw) {
     } else if (type == iceType) {
         filledCircleColor(renderer, posX, posY, towerArea, 0x2c9ae9b3);
         //Tăng kích thước cho tháp băng 1 chút
-        draw.drawTexture("iceTower", posX - (rectTower.w / 2) - 15, posY - (rectTower.h / 2) - 15,
+        draw.drawTexture(iceType, posX - (rectTower.w / 2) - 15, posY - (rectTower.h / 2) - 15,
                             rectTower.w + 30 , rectTower.h + 30 );
     }
 }

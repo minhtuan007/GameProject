@@ -7,6 +7,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "drawElement.h" 
+
 using namespace std;
 
 const int MAPW = 16;
@@ -40,6 +42,10 @@ private:
 
     int normalTowerCoin = 70;
     float damage = 20;
+
+    string iceType = "Ice";
+    string normalType = "Normal";
+    string base = "Base";
     struct LEVEL_INFO{
         int limitBase;
         int vectorNum;
@@ -76,5 +82,9 @@ public:
     int getIceDamage() const {return iceDamage;};
     int getNormalTowerPrice() const {return normalTowerCoin;};
     int getNormalDamage() const {return damage;};
-
+    string getHoverType(int x, int y);
+    void towerTypeInfo(string hoverType, Draw& draw, TTF_Font* typeFont);
+    string getIceName() const {return iceType;}
+    string getNormalName() const {return normalType;}
+    string getBaseName() const {return base;}
 };

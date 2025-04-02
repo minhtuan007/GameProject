@@ -286,3 +286,35 @@ bool Map::loadLevelInfo(string inputName){
     file.close();
     return true;
 }
+
+string Map::getHoverType(int x, int y){
+    if(x >= 5 && y >= 480 && x <= 100 && y <= 570){
+        return iceType;
+    }else if(x >= 5 && y >= 580 && x <= 100 && y <= 675){
+        return normalType;
+    }
+    else if(x >= 5 && y >= 385 && x <= 100 && y <= 470){
+        return base;
+    }
+    return "";
+}
+
+void Map::towerTypeInfo(string hoverType, Draw& draw, TTF_Font* typeFont){
+    string info = "";
+    int price;
+    if(hoverType == iceType){
+        info = "Deals 5 damage and slows enemy's speed by 50%";
+        price = iceTowerCoin;
+    }
+    else if(hoverType == normalType){
+        info = "Deals 20 damage to enemy";
+        price = normalTowerCoin;
+    }
+    else if(hoverType == base){
+        info = "Used to place a tower";
+        price = baseCoin;
+    }else{
+        info = "";
+    }
+    draw.showTowerInfo(hoverType, price, info, typeFont);
+}

@@ -1,14 +1,18 @@
 #include"Tower.h"
 
+Tower::Tower(){};
 Tower::Tower(Map& gameMap){
     baseCoin = gameMap.getBasePrice();
     iceTowerCoin = gameMap.getIceTowerPrice();
     normalTowerCoin = gameMap.getNormalTowerPrice();
     iceDamage = gameMap.getIceDamage();
     damage = gameMap.getNormalDamage();
+    this->iceType = gameMap.getIceName();
+    this->normalType = gameMap.getNormalName();
+    this->base = gameMap.getBaseName();
 };
 
-void Tower::setTower(int posX, int posY, float slowDown, string type){
+void Tower::setTower(int posX, int posY, string type, float slowDown){
     const int towerW = 80 ;
     const int towerH = 80;
 
@@ -16,12 +20,7 @@ void Tower::setTower(int posX, int posY, float slowDown, string type){
     posX = (int(posX / tileSize) * tileSize + (tileSize / 2)) ;
     posY = (int(posY / tileSize) * tileSize + (tileSize / 5)) ;
     rectTower = {
-        posX
-        //  - (towerW / 2)
-         , posY 
-        //  - (towerH / 2)
-         , // Spawn tháp sao cho tâm tháp trùng tâm của tile
-        towerW, towerH
+        posX, posY, towerW, towerH
     };
     this->posX = posX;
     this->posY = posY;

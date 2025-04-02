@@ -5,8 +5,8 @@
 #include <memory>  // Để dùng shared_ptr
 
 #include "bullet.h" 
-#include "drawElement.h" 
-#include "Map.h"
+// #include "drawElement.h" 
+// #include "Map.h"
 
 using namespace std;
 
@@ -19,9 +19,9 @@ protected:
     float bulletSpeed = 500;
     Uint32 lastShoot = 0;
     string type;
-    string iceType = "ice";
-    string normalType = "normal";
-    string base = "base";
+    string iceType;
+    string normalType;
+    string base;
     float damage;
     float iceDamage;
     int baseCoin;
@@ -30,9 +30,10 @@ protected:
     string buying;
     float slowDown = 1;
 public:
+    Tower();
     Tower(Map& gameMap);
     Uint32 getLastShoot() const {return lastShoot;};
-    void setTower(int posX, int posY, float slowDown = 1, string type = "normal");
+    void setTower(int posX, int posY, string type, float slowDown = 1);//type = normal is default
     void getTowerRect(int &posX, int &posY, int &towerW, int &towerH);
     void render(SDL_Renderer* renderer, Draw& draw);
     void shootEnemy(shared_ptr<Enemy> target, Uint32 currentTime);

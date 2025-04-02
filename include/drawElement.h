@@ -35,7 +35,7 @@ public:
     int SCREEN_WIDTH = 1280;
     void loadTexture(const string& key, const string& filePath);
     void drawTexture(const string& key, int x, int y, int w = 0, int h = 0, bool setLogicalSize = true);
-    void renderText(string text, SDL_Rect destination, TTF_Font* typeFont);
+    void renderText(string text, SDL_Rect destination, TTF_Font* typeFont, Uint32 wrapLength = 0);
 
     Slider slider;
     bool clickListBtn(int x, int y);
@@ -44,5 +44,5 @@ public:
     void renderListBtn(int coin, TTF_Font* typeFont);
     void toggleIsVisible() {slider.isVisible = !slider.isVisible;}
     bool getIsVisible() const {return slider.isVisible;}
-    
+    void showTowerInfo(string hoverType, int price, string message, TTF_Font* typeFont);
 };

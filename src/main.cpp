@@ -49,6 +49,7 @@ string mapName = "";
 string enemyPath1 = "";
 string enemyPath2 = "";
 string graphicName = "";
+string hoverType = "";
 bool flagReadFile = false;
 Uint32 lastTime;
 Uint32 runningTime = 0;
@@ -152,6 +153,11 @@ bool handleEvents() {
         if (evt.key.keysym.sym == SDLK_n) {
             cout << "n" << endl;
         }
+        if(evt.type == SDL_MOUSEMOTION){
+            int mouseX = evt.motion.x;
+            int mouseY = evt.motion.y;
+            hoverType = gameMap.getHoverType(mouseX, mouseY);
+        }
         if (evt.type == SDL_MOUSEBUTTONDOWN){
             int tempX = evt.button.x;
             int tempY = evt.button.y;
@@ -219,7 +225,7 @@ bool handleEvents() {
                         }
                         else if(gameMap.isValidToSet(tempX, tempY)){
                             if(selectedTowerType != ""){
-                                tower.setTower(tempX, tempY, slowDown, selectedTowerType);
+                                tower.setTower(tempX, tempY, selectedTowerType, slowDown);
                                 towers.push_back(tower);
                                 gameMap.setUsedTile(tempX, tempY);
                                 tower.payment(gameMap, selectedTowerType);
@@ -358,9 +364,12 @@ void renderFunction() {
     
 
         if(!draw.getIsVisible()){
-        draw.drawTexture("showlist", 0, draw.SCREEN_HEIGHT - draw.BTN_HEIGHT, draw.BTN_WIDTH, draw.BTN_HEIGHT);
+            draw.drawTexture("showlist", 0, draw.SCREEN_HEIGHT - draw.BTN_HEIGHT, draw.BTN_WIDTH, draw.BTN_HEIGHT);
         }
         else{
+            if(hoverType != ""){
+                gameMap.towerTypeInfo(hoverType, draw, font12);
+            }
             draw.drawTexture("hidelist", 0, draw.SCREEN_HEIGHT - draw.BTN_HEIGHT, draw.BTN_WIDTH, draw.BTN_HEIGHT);
         }
         draw.renderListBtn(gameMap.getCoin(), font);
@@ -612,6 +621,7 @@ void resetGame(){
     gameMap.setFortressHP(fortressHP);
     gameMap.resetMap(renderer);
     selectedTowerType = "";
+    hoverType = "";
     canSetBase = true;
     levelIndex = 0;
     flagRunningTime = true;

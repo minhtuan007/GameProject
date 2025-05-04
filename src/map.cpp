@@ -209,7 +209,12 @@ int Map::remainBase(int tempX, int tempY){
         || mapInfo[tileY][tileX] == "tile_0024.png" || mapInfo[tileY][tileX] == "tile_0025.png" || mapInfo[tileY][tileX] == "tile_0026.png"
         || mapInfo[tileY][tileX] == "tile_0036.png" || mapInfo[tileY][tileX] == "tile_0037.png" || mapInfo[tileY][tileX] == "tile_0038.png"
         || mapInfo[tileY][tileX] == "tile_0039.png" || mapInfo[tileY][tileX] == "tile_0040.png" || mapInfo[tileY][tileX] == "tile_0041.png" 
-        || mapInfo[tileY][tileX] == "tile_0042.png" || mapInfo[tileY][tileX] == "tile_0043.png"){
+        || mapInfo[tileY][tileX] == "tile_0133.png" || mapInfo[tileY][tileX] == "tile_0134.png" || mapInfo[tileY][tileX] == "tile_0135.png" 
+        || mapInfo[tileY][tileX] == "tile_0138.png" || mapInfo[tileY][tileX] == "tile_0137.png" || mapInfo[tileY][tileX] == "tile_0136.png" 
+        || mapInfo[tileY][tileX] == "tile_0139.png" || mapInfo[tileY][tileX] == "tile_0140.png" || mapInfo[tileY][tileX] == "tile_0141.png" 
+        || mapInfo[tileY][tileX] == "tile_0144.png" || mapInfo[tileY][tileX] == "tile_0143.png" || mapInfo[tileY][tileX] == "tile_0142.png" 
+        || mapInfo[tileY][tileX] == "tile_0145.png" || mapInfo[tileY][tileX] == "tile_0146.png" || mapInfo[tileY][tileX] == "tile_0042.png"
+        || mapInfo[tileY][tileX] == "tile_0043.png"){
 
         return -1;
     }

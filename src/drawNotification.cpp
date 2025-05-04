@@ -5,8 +5,7 @@ Notification::Notification(){};
 // : Draw(nullptr){};
 
 Notification::Notification(SDL_Renderer* renderer) : Draw(renderer) {
-    // Khởi tạo renderer từ class cha Draw
-    loadTexture(key, "D:/laptrinh/LTNC/Code/GameProject/assets/notification.png");
+    loadTexture(key, "D:/laptrinh/CPP/LTNC/Code/GameProject/assets/notification.png");
 }
 
 void Notification::setNotif(string text, int x, int y, int w, int h, Uint32 startTime) {

@@ -585,7 +585,7 @@ void kill() {
 
 
 string fileAssets(string file) {
-    return "D:/laptrinh/LTNC/Code/GameProject/assets/" + file;
+    return "D:/laptrinh/CPP/LTNC/Code/GameProject/assets/" + file;
 }
 
 void renderFPS() {

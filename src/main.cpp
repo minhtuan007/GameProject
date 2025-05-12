@@ -125,9 +125,6 @@ bool GameIsRunning() {
             }
             mapLoaded = true;
             isLevelPicked = true;
-            // level_info = "";
-            // mapName = "";
-            // graphicName = "";
             lastTime = SDL_GetTicks();
         }
 

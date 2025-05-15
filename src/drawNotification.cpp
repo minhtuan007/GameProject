@@ -5,7 +5,7 @@ Notification::Notification(){};
 // : Draw(nullptr){};
 
 Notification::Notification(SDL_Renderer* renderer) : Draw(renderer) {
-    loadTexture(key, "D:/laptrinh/CPP/LTNC/Code/GameProject/assets/notification.png");
+    loadTexture(key, "assets/notification.png");
 }
 
 void Notification::setNotif(string text, int x, int y, int w, int h, Uint32 startTime) {

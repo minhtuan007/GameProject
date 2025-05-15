@@ -6,7 +6,7 @@ Draw::Draw() : renderer(nullptr) {
 
 Draw::Draw(SDL_Renderer* renderer) : renderer(renderer){
     if (!renderer) {
-        std::cerr << "Renderer is null in Draw constructor!" << std::endl;
+        cerr << "Renderer is null in Draw constructor!" << endl;
     }
 }
 

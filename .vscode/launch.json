@@ -5,7 +5,7 @@
             "name": "Run SDL2",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/MyGame.exe",
+            "program": "${workspaceFolder}/Tower Defense.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

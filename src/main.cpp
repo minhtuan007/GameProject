@@ -147,9 +147,6 @@ bool handleEvents() {
         if (evt.key.keysym.sym == SDLK_F1 && evt.type == SDL_KEYDOWN) {
             system("pause");
         }
-        if (evt.key.keysym.sym == SDLK_n) {
-            cout << "n" << endl;
-        }
         if(evt.type == SDL_MOUSEMOTION){
             int mouseX = evt.motion.x;
             int mouseY = evt.motion.y;
@@ -158,7 +155,6 @@ bool handleEvents() {
         if (evt.type == SDL_MOUSEBUTTONDOWN){
             int tempX = evt.button.x;
             int tempY = evt.button.y;
-            cout<< tempX << " " << tempY<<endl;
             if(!isLevelPicked){// Setup bản đồ cho từng lv
                 int pickingMap = checkLevel(tempX, tempY);
                 if(pickingMap != -1){
@@ -589,7 +585,7 @@ void kill() {
 
 
 string fileAssets(string file) {
-    return "D:/laptrinh/CPP/LTNC/Code/GameProject/assets/" + file;
+    return "assets/" + file;
 }
 
 void renderFPS() {

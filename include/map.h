@@ -27,7 +27,7 @@ private:
     string graphicInfo[MAPH*2][MAPW*2]; 
     string graphicFile = "";
     string mapFile = "";
-    string basePath = "D:/laptrinh/CPP/LTNC/Code/GameProject/assets/Map/Tiles/";
+    string basePath = "assets/Map/Tiles/";
     int initCoin;
     float initFortressHP;
     float initEnemyHP;

@@ -1,7 +1,6 @@
 Dự án tự xây dựng và thiết kế, không based trên dự án nào có sẵn.
 ------------------------------------------------------------------------------------------------------
-Tên Game: The Last Bastion
-
+Tên Game: Tower Defense
 - MỤC TIÊU CHÍNH
 Người chơi phải bảo vệ cổng thành (Nexus Core) trước các đợt tấn công liên tiếp của enemy.
 Nếu cổng thành mất toàn bộ HP → thua.

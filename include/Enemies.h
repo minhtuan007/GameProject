@@ -31,8 +31,8 @@ private:
     bool explode = false;
     bool startExploding = false;
     int exploreFrame = 0;
-    Uint32 explodeTimer = 0; // Biến thành viên để đếm thời gian nổ
-    Uint32 lastUpdate = 0; // Biến thành viên để lưu thời điểm cập nhật cuối
+    Uint32 explodeTimer = 0; // đếm thời gian nổ
+    Uint32 lastUpdate = 0; //lưu thời điểm cập nhật cuối
 public:    
     // Enemy();       
     Enemy(string enemyPathFile1, string enemyPathFile2, Map& gameMap); 

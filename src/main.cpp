@@ -159,7 +159,7 @@ bool handleEvents() {
             int tempX = evt.button.x;
             int tempY = evt.button.y;
             cout<< tempX << " " << tempY<<endl;
-            if(!isLevelPicked){
+            if(!isLevelPicked){// Setup bản đồ cho từng lv
                 int pickingMap = checkLevel(tempX, tempY);
                 if(pickingMap != -1){
                     string levelFolder = "level" + to_string(pickingMap);
@@ -178,11 +178,12 @@ bool handleEvents() {
                     showInfo = true;
                 }
                 Tower tower(gameMap);
-                if(draw.clickListBtn(tempX, tempY)){
+                if(draw.clickListBtn(tempX, tempY)){// Khung item
                     draw.toggleIsVisible();
                 }
                 else if(tower.buyItem(tempX, tempY) && draw.getIsVisible()){
                     canSetBase = false;
+                    // Mua item
                     if(tower.isEnoughCoin(gameMap.getCoin(), tower.getBuying())){
                         selectedTowerType = tower.getBuying();
                         if(selectedTowerType == tower.geticeType()){
@@ -202,6 +203,7 @@ bool handleEvents() {
                 }else{
                     canSetBase = true;
                 }
+                // đặt đế
                 if (gameMap.hasTower(tempX, tempY) == 0 && canSetBase) {
                     if (evt.button.button == SDL_BUTTON_LEFT) {
                         if(selectedTowerType == tower.getBaseType()){
@@ -240,6 +242,7 @@ bool handleEvents() {
                     }
                 }
             }
+            // Show thuộc tính item
             else if(showInfo && draw.clickInfo_BackBtn(tempX, tempY)){
                 showInfo = false;
                 lastTime = SDL_GetTicks();
@@ -276,6 +279,7 @@ void updateFunction() {
         Uint32 dT = currentTime - lastTime;
         runningTime += dT;
         lastTime = currentTime;
+        //Tính toán các đợt tấn công của enemy
         if(runningTime >= (gameMap.level.startWave[levelIndex] + gameMap.level.waveLength[levelIndex]) * 1000 && flagRunningTime){
             levelIndex += 1;
             if(levelIndex < gameMap.level.vectorNum){
@@ -289,13 +293,15 @@ void updateFunction() {
         if(levelIndex < gameMap.level.vectorNum && runningTime >= (gameMap.level.startWave[levelIndex]) * 1000
             && runningTime <= (gameMap.level.startWave[levelIndex] + gameMap.level.waveLength[levelIndex]) * 1000){
             int MAX_ENEMIES = gameMap.level.enemyNum[levelIndex];
+            //Spawn enemy
             if (int(enemies.size()) < MAX_ENEMIES && rand() % 100 < 2) {
                 enemies.push_back(make_shared<Enemy>(fileAssets(enemyPath1), fileAssets(enemyPath2), gameMap));
             }
             flagRunningTime = true;
         }
 
-
+        // Kiểm tra enemy đi ra khỏi màn hình hoặc bị tiêu diệt 
+        //-> xoá đạn nếu nó dí enemy khi enemy bị tiêu diệt
         for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();) {
             (*enemyIt)->update(dT, fortressHP);
             gameMap.setFortressHP(fortressHP);
@@ -306,6 +312,7 @@ void updateFunction() {
                 }
                 enemyIt = enemies.erase(enemyIt);
             } else {
+                //Tính toán đạn bắn enemy khi enemy tới vùng hoạt động của tháp
                 for (auto& tower : towers) {
                     int towerPosX, towerPosY, towerW, towerH;
                     tower.getTowerRect(towerPosX, towerPosY, towerW, towerH);

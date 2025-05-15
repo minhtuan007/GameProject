@@ -17,7 +17,7 @@ void Notification::setNotif(string text, int x, int y, int w, int h, Uint32 star
     //  + notif.indexY * y;
     notif.w = w;
     notif.h = h;
-    notif.startTime = (startTime == 0) ? SDL_GetTicks() : startTime; // Nếu không truyền startTime, lấy thời gian hiện tại
+    notif.startTime = (startTime == 0) ? SDL_GetTicks() : startTime;
     notifs.push_back(notif);
     // tempIndexY++;
 }
@@ -32,9 +32,7 @@ void Notification::updateAndShow(TTF_Font* typeFont) {
             it = notifs.erase(it); // Xóa thông báo hết thời gian
             // it->indexY -= 1;
         } else {
-            // Vẽ nền thông báo
             drawTexture(key, it->x, it->y, it->w, it->h);
-            // Vẽ text, căn chỉnh trong khung
             SDL_Rect messDst = {it->x + 25, it->y + 18, 0, 0};
             renderText(it->text, messDst, typeFont);
             ++it;

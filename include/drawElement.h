@@ -14,12 +14,12 @@ using namespace std;
 class Draw {
 private:
     struct Slider{
-        float currentX;    // Vị trí hiện tại
-        float targetX;     // Vị trí đích
-        bool isVisible = true;    // Trạng thái hiển thị
-        bool isAnimating;  // Đang animating
-        int value;         // Giá trị slider (0-100)
-        Uint32 startTime;  // Thời điểm bắt đầu animation
+        float currentX;    
+        float targetX;    
+        bool isVisible = true;    
+        bool isAnimating;  
+        int value;         
+        Uint32 startTime;
         Uint32 ANIMATION_DURATION = 500;
     };
 protected:

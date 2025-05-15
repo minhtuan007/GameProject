@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include <vector>
 #include <SDL2_gfxPrimitives.h>
-#include <memory>  // Để dùng shared_ptr
+#include <memory>
 
 #include "bullet.h" 
 // #include "drawElement.h" 

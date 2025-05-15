@@ -1,4 +1,4 @@
-!!! Dự án tự xây dựng và thiết kế, không được based trên dự án nào có sẵn. !!!
+Dự án tự xây dựng và thiết kế, không based trên dự án nào có sẵn.
 ------------------------------------------------------------------------------------------------------
 Tên Game: The Last Bastion
 
